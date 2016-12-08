@@ -26,23 +26,22 @@ default
     {
         llListen(444, "", NULL_KEY, "");
         
-        list args = llParseString2List(llToLower(message),[" "],[]);
-        string parsedMsg = llList2String(args,0);
-        
-        if (id == myOwner)
+        if (id == myOwner && channel == 25)
         {
             string answer = "";
+            llOwnerSay("message=" + message);
             
-            if(parsedMsg == llList2String(buttons, 0)) { answer = "tex1"; }
-            else if(parsedMsg == llList2String(buttons, 1)) { answer = "tex2"; }
-            else if(parsedMsg == llList2String(buttons, 2)) { answer = "tex3"; }
-            else if(parsedMsg == llList2String(buttons, 3)) { answer = "tex4"; }
-            else if(parsedMsg == llList2String(buttons, 4)) { answer = "tex5"; }
-            else if(parsedMsg == llList2String(buttons, 5)) { answer = "tex6"; }
-            else if(parsedMsg == llList2String(buttons, 6)) { answer = "tex7"; }
-            else if(parsedMsg == llList2String(buttons, 7)) { answer = "tex8"; }
-            else if(parsedMsg == llList2String(buttons, 8)) { answer = "tex9"; }
-            llWhisper(444, HUDname + "|"  + string(myOwner) + "|" + answer);
+            if(message == llList2String(buttons, 0)) { answer = "tex1"; }
+            else if(message == llList2String(buttons, 1)) { answer = "tex2"; }
+            else if(message == llList2String(buttons, 2)) { answer = "tex3"; }
+            else if(message == llList2String(buttons, 3)) { answer = "tex4"; }
+            else if(message == llList2String(buttons, 4)) { answer = "tex5"; }
+            else if(message == llList2String(buttons, 5)) { answer = "tex6"; }
+            else if(message == llList2String(buttons, 6)) { answer = "tex7"; }
+            else if(message == llList2String(buttons, 7)) { answer = "tex8"; }
+            else if(message == llList2String(buttons, 8)) { answer = "tex9"; }
+                  
+            llWhisper(444, HUDname + ","  + string(myOwner) + "," + answer);
         }
     }
 
