@@ -21,7 +21,7 @@ default
     {
         if (channel == 444)
         {
-            list msgIncoming = llParseString2List(message, ["|"], [""]);
+            list msgIncoming = llParseString2List(message, [","], [""]);
             string HUDanswering = llList2String(msgIncoming, 0);
             key HUDOwner = llList2Key(msgIncoming, 1);
            
