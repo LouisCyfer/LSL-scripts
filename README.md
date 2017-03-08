@@ -1,5 +1,5 @@
 # LSL-scripts
-
+> all folders in this repo are licensed through MIT (until further notice :sunglasses: )
 ## STHC (simple texture hud config)
 > STHC intends to be a pretty simple set of 2 parts where the reciever-part goes to the linked prim-set (clothes/furniture/etc) and the sender-part goes to any prim which is designed to be a HUD.
 
