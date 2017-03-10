@@ -8,11 +8,12 @@
 
 ## Telly Pole
 > This is designed to be a simple teleporter script where you can add SL-Landmarks to any prim (preferibly root if a linked set of prims) which will become teleport targets if anyone sits on the prim.
+- currently sit is not implented yet, works only on touch
 
 
 ## To-Do
 - [ ] fine-tuning STHC
-- [ ] Telly Pole finetuning:
- * might become owner-only functionality in further releases because teleport function is currently borked
+- [X] Telly Pole finetuning:
+ * ~~might become~~ owner-only functionality in further releases because teleport function is currently borked
  * I'm open to suggestions to solve the issue about not beeing able to tp avatars through a prim-inventory-LM
 - [X] moah coffee!!!
