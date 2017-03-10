@@ -1,3 +1,6 @@
+// this script is licensed with MIT and can be found here:
+// https://github.com/LouisCyfer/LSL-scripts
+//
 // STHC (simple texture hud config) - sender-part, goes to the HUD
 // preconfigured for linked prims and fixed 9 textures
 
