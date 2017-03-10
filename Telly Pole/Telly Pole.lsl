@@ -1,30 +1,22 @@
-string version = "Telly Pole v0.1";
-key Owner; key currUser; integer dialogChannel; integer listener;
+// this script is licensed with MIT and can be found here:
+// https://github.com/LouisCyfer/LSL-scripts
 
-integer status = FALSE;
-integer locationLimit = 9;
+// pre-variable-setups
+string version = "Telly Pole v0.2";
+key Owner; key currUser; integer status = FALSE; integer locationLimit = 9;
 
-list locationNames = [];
-list invalidLocs = [];
-
-key HttpRequest;
-
-list requestIDs = [];
-list requestsDone = [];
-integer queueDone = FALSE;
-integer reQueue = 0;
-
-list LocationTargets = [];
-
-integer idx = 0; integer max = 0;
-
+list locationNames = []; list LocationTargets = []; list invalidLocs = [];
+list requestIDs = []; integer queueDone = FALSE; integer reQueue = 0;
+integer idx = 0; integer max = 0; integer tpTo = 0;
 integer timerCounter = 0;
 
+// dialogchannel-setups
+integer dialogChannel; integer listener;
 resetListen(key gID) { llListenRemove(listener); listener = llListen(dialogChannel, "", gID, ""); }
 resetListenChannel() { dialogChannel = -1 - (integer)("0x" + llGetSubString( (string)llGetKey(), -7, -1) ); }
 
 showLocations()
-{
+{ // printing locations in chat
     string locMsg = "";
     idx = 0; max = llGetListLength(requestIDs);
     
@@ -35,11 +27,7 @@ showLocations()
         do
         {
             locMsg += "\n" + (string)idx + " --> " + llList2String(locationNames, idx);
-            
-            if(currUser == Owner)
-            {
-                locMsg += " | " + llList2String(LocationTargets, idx);
-            }
+            if(currUser == Owner) { locMsg += " | " + llList2String(LocationTargets, idx); }
             
             idx++;
         } while(idx < max);
@@ -59,13 +47,12 @@ showLocations()
 }
 
 rescanLocations()
-{    
+{
     // reset lists
     locationNames = [];
     invalidLocs = [];
     requestIDs = [];
     LocationTargets = [];
-    requestsDone = [];
     queueDone = FALSE;
     
     // set the complete-timer
@@ -101,7 +88,6 @@ rescanLocations()
             {
                 locationNames += itemName;
                 requestIDs += llRequestInventoryData(itemName);
-                requestsDone += FALSE;
                 // llOwnerSay("reqID " + (string)idx + " = " + (string)reqID);
             }
             else { invalidLocs += itemName; }
@@ -111,74 +97,75 @@ rescanLocations()
 }
 
 handleRequests(key id, string data)
-{
+{ // every request goes here, unanswered requests silently fail, sadly (might need a workaround later)
     integer reqID = llListFindList(requestIDs, [id]);
     
-    if(reqID == -1)
-    {
-        llOwnerSay("Something went wrong! cound not process request id " + (string)id);
-    }
+    if(reqID == -1) { llOwnerSay("Something went wrong! cound not process request id " + (string)id); }
     else
     {
         LocationTargets = llListInsertList(LocationTargets, [(vector)data], reqID);
-        if(reqID == llGetListLength(requestsDone) - 1) { queueDone = TRUE; }
+        if(reqID == llGetListLength(requestIDs) - 1) { queueDone = TRUE; }
     }
 }
         
 showMainMenu(key gKey, integer ShowMenu)
-{
-    string DialogTxt = "\n\n"+ version;
-    list currStatus = ["●►○", "●"];
-    
-    if(status == FALSE) { currStatus = ["○►●", "○"]; }
-    
-    string statusMsg = "Current Status " + llList2String(currStatus, 1); // ● = enabled  ○ = disabled
-    DialogTxt += "\n\n" + statusMsg + "\n\nNOTE:\n  --> script reacts instantly to changes\n  --> only the owner can toggle | ● = on  ○ = off\n  --> ':: locations ::' prints full location names in chat";
-    
+{ // main function for the menu/dialog
     list buttons = [];
-    string toggleButton = "toggle " + llList2String(currStatus, 0);
-    
-    if(currUser != Owner) { toggleButton = " "; }
-    
-    list mainButtons = [toggleButton,":: locations ::", ":: EXIT ::"];
-    
     list addButtons = [];
+    list mainButtons = [];
+    string DialogTxt = "\n\n"+ version;
     string currentButton = "";
+    tpTo = -1;
     
-    idx = 0; max = llGetListLength(locationNames);
-    
-    if(max > 0 && status == TRUE)
+    if(ShowMenu == 0)
     {
-        // DialogTxt += "\n\nLocations:";
-        addButtons = [];
-        while(idx<max)
+        list currStatus = ["●►○", "●"];
+        
+        if(status == FALSE) { currStatus = ["○►●", "○"]; }
+        
+        string statusMsg = "Current Status " + llList2String(currStatus, 1); // ● = enabled  ○ = disabled
+        DialogTxt += "\n\n" + statusMsg + "\n\nNOTE:\n  --> script reacts instantly to changes\n  --> only the owner can toggle | ● = on  ○ = off";
+        string toggleButton = "toggle " + llList2String(currStatus, 0);
+        
+        if(status == TRUE) { DialogTxt += "\n  --> ':: locations ::' prints full location names in chat"; }
+        if(currUser != Owner) { toggleButton = " "; }
+        mainButtons = [toggleButton, " ", ":: EXIT ::"];
+        
+        idx = 0; max = llGetListLength(locationNames);
+    
+        if(max > 0 && status == TRUE)
         {
-            currentButton = llList2String(locationNames, idx);
+            // DialogTxt += "\n\nLocations:";
+            addButtons = [];
+            mainButtons = llListReplaceList(mainButtons, [":: locations ::"], 1, 1);
             
-            // make LM-name fit into a button if longer than 10 characters
-            if (llStringLength(currentButton) > 10)
+            while(idx<max)
             {
-                currentButton = llGetSubString(currentButton, 0, 10);
+                currentButton = "location " + (string)(idx + 1);
+                addButtons += currentButton;
+                idx++;
             }
-            
-            // DialogTxt += "\n" + (string)(idx + 1) + " --> " + currentButton;
-            // llOwnerSay("currentButton=" + currentButton);
-            
-            currentButton = "location " + (string)(idx + 1);
-            
-            addButtons += currentButton;
-            idx++;
         }
     }
-    
-    // llOwnerSay("addButtons=" + llDumpList2String(addButtons, ", "));
+    else
+    {
+        tpTo = ShowMenu - 1;
+        mainButtons = [":: teleport ::", ":: back ::", ":: EXIT ::"];
+    }
     
     buttons = mainButtons + addButtons;
     llDialog(gKey, DialogTxt, buttons, dialogChannel);
 }
 
+teleportUser()
+{ // main teleport function
+    // llMapDestination("", llList2Vector(LocationTargets, targetIndex), ZERO_VECTOR);
+    llRequestPermissions(currUser, PERMISSION_TELEPORT);
+    // llRequestExperiencePermissions(currUser, "");
+}
+
 init()
-{
+{ // this is for the pre-start/initiation
     llSay(0, version + " starting up, please be patient!");
     Owner = llGetOwner();
     currUser = Owner;
@@ -206,12 +193,15 @@ default
         {
             if(reQueue > 0)
             {
+                // the user added another item or changed anything, so we do another queue at the end of the current
+                // (stacks up very quickly and not seen it happen so slow, hope it won't be making issues)
+                
                 reQueue -= 1;
                 rescanLocations();
                 llOwnerSay("re-running requests, please be patient!");
             }
             else
-            {
+            { // all requests done!
                 llSetTimerEvent(0);
                 showLocations();
                 llOwnerSay("Requests proceeding done!");
@@ -223,11 +213,20 @@ default
     touch_start(integer total_number)
     {
         if(queueDone == TRUE)
-        {
+        { // make sure theres nothing in background interferring things
             currUser = llDetectedKey(0);
-            resetListen(currUser);
-            showMainMenu(currUser, 0);
+            if(currUser == Owner)
+            { // sadly it makes currently just sense by making it owner-only
+                resetListen(currUser);
+                showMainMenu(currUser, 0);
+            }
         }
+    }
+    
+    experience_permissions(key av)
+    {
+        // *possible future implentation*
+        //llTeleportAgent(av, llList2String(locationNames, tpTo), llList2Vector(LocationTargets, tpTo), ZERO_VECTOR);
     }
     
     changed(integer change)
@@ -241,32 +240,38 @@ default
         }
     }
     
-    dataserver(key id, string data)
+    dataserver(key id, string data) { handleRequests(id, data); }
+    
+    run_time_permissions(integer perm)
     {
-        handleRequests(id, data);
+        if(PERMISSION_TELEPORT & perm)
+        {
+            llOwnerSay("tpTo=" + (string)tpTo);
+            llTeleportAgent(currUser, llList2String(locationNames, tpTo), llList2Vector(LocationTargets, tpTo), ZERO_VECTOR);
+        }
     }
     
     listen(integer chan, string name, key id, string msg)
     {
         if(chan == dialogChannel)
-        {
-            llOwnerSay("chan=" + (string)chan + " | name=" + name + " | id=" + (string)id + "msg=" + msg);
-            
+        { // handle all the dialog's
             if(msg == " " || msg == ":: EXIT ::") { }
             else
             {
-                if(msg == "toggle ○►●" || msg == "toggle ●►○")
+                list parsedMsg = llParseString2List(msg, [" "], [""]);
+                llOwnerSay("chan=" + (string)chan + " | msg=" + msg + " | parsedMsg0=" + llList2String(parsedMsg, 0) + " | parsedMsg1=" + llList2String(parsedMsg, 1));
+                
+                integer menuID = 0;
+                
+                if(llList2String(parsedMsg, 0) == "location")
                 {
-                    // if(status == TRUE) { status = FALSE; }
-                    // else if(status == FALSE) { status = TRUE; }
-                    status = !status;
+                    menuID = llList2Integer(parsedMsg, 1);
                 }
-                else if(msg == ":: locations ::")
-                {
-                    showLocations();
-                    // HttpRequest = llHTTPRequest( "https://cap.secondlife.com/cap/0/b713fe80-283b-4585-af4d-a3b7d9a32492?var=region&grid_x=1000&grid_y=1000",[],"");
-                }
-                showMainMenu(currUser, 0);
+                else if(msg == "toggle ○►●" || msg == "toggle ●►○") { status = !status; }
+                else if(msg == ":: locations ::") { showLocations(); }
+                else if(msg == ":: teleport ::") { menuID = -1; teleportUser(); }
+                
+                if(menuID >= 0) { showMainMenu(currUser, menuID); }
             }
         }
     }
