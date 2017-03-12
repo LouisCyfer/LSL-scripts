@@ -14,6 +14,6 @@
 ## To-Do
 - [ ] fine-tuning STHC
 - [X] Telly Pole finetuning:
- * ~~might become~~ owner-only functionality in further releases because teleport function is currently borked
- * I'm open to suggestions to solve the issue about not beeing able to tp avatars through a prim-inventory-LM
+ * owner-only functionality in current release because of [llTeleportAgent](http://wiki.secondlife.com/wiki/LlTeleportAgent)
+ * I'm open to suggestions for a workaround of llTeleportAgent not beeing able to teleport regular avatars (non-owner)
 - [X] moah coffee!!!
