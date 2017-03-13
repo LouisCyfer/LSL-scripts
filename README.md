@@ -14,7 +14,6 @@
 
 ## To-Do
 - [ ] fine-tuning STHC
-- [X] Telly Pole finetuning:
- * owner-only functionality in current release because of [llTeleportAgent](http://wiki.secondlife.com/wiki/LlTeleportAgent)
- * I'm open to suggestions for a workaround of llTeleportAgent not beeing able to teleport regular avatars (non-owner)
+- [ ] Telly Pole non-owner teleport
+- [X] Telly Pole finetuning
 - [X] moah coffee!!!
