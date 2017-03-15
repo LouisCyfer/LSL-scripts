@@ -1,5 +1,5 @@
 # LSL-scripts
-> all folders in this repo are licensed through MIT (until further notice :sunglasses:)
+> Each folder in this repo represents a single sub-project and generally is licensed through MIT (until further notice :sunglasses:). STHC and Telly Pole are based on ideas of a close friend but allowed me to publish it.
 
 
 ## STHC (simple texture hud config)
