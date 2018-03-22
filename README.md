@@ -12,6 +12,11 @@
 - fun-fact: also working if you add it as HUD (unintended by design but possibly useful)
 
 
+## AutoAnimator
+> This simple script lets people animate if they sit on any prim, must have anmiations in it, check the options by touching the prim.
+- currently things might be buggy
+
+
 ## To-Do
 - [ ] fine-tuning STHC
 - [ ] Telly Pole non-owner teleport
