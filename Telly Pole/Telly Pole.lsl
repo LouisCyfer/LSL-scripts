@@ -2,7 +2,7 @@
 // https://github.com/LouisCyfer/LSL-scripts
 
 // pre-variable-setups
-string version = "Telly Pole v0.2";
+string version = "Telly Pole v0.2.1";
 key Owner; key currUser; integer status = FALSE; integer locationLimit = 9;
 
 list locationNames = []; list LocationTargets = []; list invalidLocs = [];
@@ -246,8 +246,9 @@ default
     {
         if(PERMISSION_TELEPORT & perm)
         {
-            llOwnerSay("tpTo=" + (string)tpTo);
+            // llOwnerSay("tpTo=" + (string)tpTo);
             llTeleportAgent(currUser, llList2String(locationNames, tpTo), llList2Vector(LocationTargets, tpTo), ZERO_VECTOR);
+            // llTeleportAgent(key, lmstring, pos, lookat);
         }
     }
     
@@ -259,7 +260,7 @@ default
             else
             {
                 list parsedMsg = llParseString2List(msg, [" "], [""]);
-                llOwnerSay("chan=" + (string)chan + " | msg=" + msg + " | parsedMsg0=" + llList2String(parsedMsg, 0) + " | parsedMsg1=" + llList2String(parsedMsg, 1));
+                // llOwnerSay("chan=" + (string)chan + " | msg=" + msg + " | parsedMsg0=" + llList2String(parsedMsg, 0) + " | parsedMsg1=" + llList2String(parsedMsg, 1));
                 
                 integer menuID = 0;
                 
