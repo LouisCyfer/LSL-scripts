@@ -1,3 +1,6 @@
+# NOTICE:
+the development of this mod moved to [GitLab](https://gitlab.com/LouisCyfer/LSL-scripts)
+
 # LSL-scripts
 > Each folder in this repo represents a single sub-project and generally is licensed through MIT (until further notice :sunglasses:). STHC and Telly Pole are based on ideas of a close friend but allowed me to publish it.
 
